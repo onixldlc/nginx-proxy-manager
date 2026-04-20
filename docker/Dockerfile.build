@@ -19,14 +19,14 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
-# Install deps first (better caching)
+ENV NODE_OPTIONS="--max_old_space_size=2048 --openssl-legacy-provider"
+
 COPY frontend/package.json frontend/yarn.lock ./
 RUN yarn install --frozen-lockfile --network-timeout 600000
 
-# Copy rest of frontend source and build
 COPY frontend/ ./
-# NPM frontend uses gulp/webpack; `yarn build` produces ./dist
-RUN yarn build
+RUN yarn locale-compile \
+    && yarn build
 
 
 # -----------------------------------------------------------------------------
