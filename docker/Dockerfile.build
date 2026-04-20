@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------------
 # Stage 1: frontend build (produces /app/dist)
 # -----------------------------------------------------------------------------
-FROM node:16-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
 # Install deps first (better caching)
