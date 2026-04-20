@@ -4,7 +4,7 @@ on:
   push:
     branches: [develop]
     paths:
-      - 'docker/Dockerfile'
+      - 'docker/Dockerfile.build'
       - 'docker/**'
       - 'backend/**'
       - 'frontend/**'
@@ -118,11 +118,15 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile
+          file: ./docker/Dockerfile.build
           push: true
           platforms: linux/amd64,linux/arm64/v8
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_VERSION=${{ needs.determine-version.outputs.version }}
+            BUILD_COMMIT=${{ github.sha }}
+            BUILD_DATE=${{ github.event.repository.updated_at }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
